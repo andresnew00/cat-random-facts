@@ -1,11 +1,11 @@
 const factsUrl = "https://cat-fact.herokuapp.com/facts/random";
 const imgUrl = "https://api.thecatapi.com/v1/images/search";
 
-getResponse(factsUrl).then(fact => {
+getResponse("GET", factsUrl).then(fact => {
   document.getElementById("right-section").innerHTML = "<p>" + fact.text + "</p>";
 });
 
-getResponse(imgUrl).then(img => {
+getResponse("GET", imgUrl).then(img => {
   var image = document.createElement("img");
   image.src = img[0].url;
 
@@ -15,16 +15,17 @@ getResponse(imgUrl).then(img => {
 
 //Functions
 
-function getResponse(url) {
+function getResponse(method, url) {
     return new Promise((resolve, reject) => {
       const request = new XMLHttpRequest();
-      request.open("GET", url);
+      request.open(method, url);
   
+      request.responseType = 'json';
+
       request.onload = () => {
         //checks for the right status
         if (request.status == 200) {
-          const data = JSON.parse(request.response);
-          resolve(data);
+          resolve(request.response);
         }
         // meaningful error
         else {
